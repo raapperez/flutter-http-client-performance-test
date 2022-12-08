@@ -2,8 +2,6 @@
 
 This test analyzes the performance impact of the load in Dart's thread over the requests from different HTTP clients.
 
-![Print screen from the performance test app](./docs/images/screen.png)
-
 ## Environment
 * Flutter 3.0.2
 * Dart 2.17.3
@@ -58,7 +56,7 @@ This process happens for each HTTP client.
 
 ### Heavy scenario
 
-Same as **Light scenario**, but while the execution happens, a Timer increments a counter in the screes after each 200 milliseconds.
+Same as **Light scenario**, but while the execution happens, a Timer increments a counter in the screen after each 200 milliseconds.
 The counter increment behavior simulates things happening on Flutter while the requests are being made.
 
 ## Results
@@ -68,9 +66,9 @@ The counter increment behavior simulates things happening on Flutter while the r
 ## Conclusions
 
 * All the Flutter's HTTP clients perform better than the native's one on the light scenario.
-* The native has the best performance on heavy scenario.
-* Considering just Flutter HTTP clients, the best to the worst performance order is: HttpClient -> http -> dio. That can be correlated to the amount of features these libs add.
-* We can assume the native performs better on heavy scenario because it has one extra thread to process.
+* The native has the best performance on the heavy scenario.
+* Considering just Flutter HTTP clients, the best to the worst performance order is: HttpClient -> http -> dio. That can be correlated to the amount of features these libs have.
+* We can assume the native performs better on the heavy scenario because it has one extra thread to process the HTTP requests.
 
 ## Additional thoughts
 
