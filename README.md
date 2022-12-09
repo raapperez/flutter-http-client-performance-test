@@ -43,7 +43,7 @@ multi-platform, and supports mobile, desktop, and the browser.
 ### native with platform channel (Android)
 
 A solution made just for this performance test. It uses a platform channel that uses [okhttp](https://square.github.io/okhttp/) to send requests.
-Each request uses a single thread from the [ExecutorService](https://developer.android.com/reference/java/util/concurrent/ExecutorService). (Android doesn't allow to make an HTTP request in the main thread).
+Each request uses a single thread from the [ExecutorService](https://developer.android.com/reference/java/util/concurrent/ExecutorService). (Android doesn't allow to make HTTP request in the main thread).
 
 ## Test scenarios
 
