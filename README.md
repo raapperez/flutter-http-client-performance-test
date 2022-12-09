@@ -3,17 +3,18 @@
 This test analyzes the performance impact of the load in Dart's thread over the requests from different HTTP clients.
 
 ## Environment
+### Dependencies
 * Flutter 3.0.2
 * Dart 2.17.3
 * dio 4.0.6
 * http 0.13.5
 * okhttp 2.5.0
 
-Device:
+### Device
 * Samsung Galaxy S22
 * Android 13
 
-HTTP Server:
+### HTTP Server
 * [Simple HTTP Server](https://play.google.com/store/apps/details?id=com.phlox.simpleserver)
   * Hosted by the device itself to avoid network latency impact
   * Using default settings
@@ -48,15 +49,15 @@ Each request uses a single thread from the [ExecutorService](https://developer.a
 
 ### Light scenario
 
-A button from a Flutter screen is pressed to start 1000 HTTP requests that are sent one at a time.
+A button from a Flutter screen is pressed to start **1000 HTTP requests** that are sent one at a time.
 
-A time of 500 milliseconds is awaited before each request start. The idea of the delay is to simulate casual requests.
+A time of **500 milliseconds** is awaited before each request start. The idea of the delay is to simulate casual requests.
 
 The time for the HTTP request is measured in microseconds and stored in an array.
 
 ### Heavy scenario
 
-Same as **Light scenario**, but while the execution happens, a Timer increments a counter in the screen after each 200 milliseconds.
+Same as **Light scenario**, but while the execution happens, a Timer increments a counter in the screen after each **200 milliseconds**.
 The counter increment behavior simulates things happening on Flutter while the requests are being made.
 
 ## Results
@@ -69,12 +70,12 @@ The counter increment behavior simulates things happening on Flutter while the r
 
 * All the Flutter's HTTP clients perform better than the native's one on the light scenario.
 * The native has the best performance on the heavy scenario.
-* Considering just Flutter HTTP clients, the best to the worst performance order is: HttpClient -> http -> dio. That can be correlated to the amount of features these libs have.
+* Considering just Flutter HTTP clients, the best to the worst performance order is: **HttpClient** -> **http** -> **dio**. That can be correlated to the amount of features these libs have.
 * We can assume the native performs better on the heavy scenario because it has one extra thread to process the HTTP requests.
 
 ## Additional thoughts
 
-Despite dio has the worst performance compared to the other Flutter's clients, it adds lots of features and improves the development experience.
-Using a simpler HTTP client but adding similar features would make them perform closer to dio. 
+Despite **dio** has the worst performance compared to the other Flutter's clients, it adds lots of features and improves the development experience.
+Using a simpler HTTP client but adding similar features would make them perform closer to **dio**. 
 
-The native solution could look a good way to go, but on this case, it is necessary to implement and maintain additional logic on native's side. 
+The **native** solution could look a good way to go, but on this case, it is necessary to implement and maintain additional logic on native's side. 
