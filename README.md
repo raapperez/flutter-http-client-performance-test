@@ -49,11 +49,11 @@ Each request uses a single thread from the [ExecutorService](https://developer.a
 
 ### [dio](https://pub.dev/packages/dio) Isolate (Flutter)
 
-A solution made just for this performance test. It opens an [isolate](https://pub.dev/packages/flutter_isolate) to perform each HTTP request with dio.
+A solution made just for this performance test. It opens an [isolate](https://pub.dev/packages/flutter_isolate) to perform each HTTP request with **dio**.
 
 ### [dio](https://pub.dev/packages/dio) Isolate Service (Flutter)
 
-A solution made just for this performance test. It opens an [isolate](https://pub.dev/packages/flutter_isolate) service that is re-used for all HTTP requests. The requests are made using a single instance of dio.
+A solution made just for this performance test. It opens an [isolate](https://pub.dev/packages/flutter_isolate) service that is re-used for all HTTP requests. The requests are made using a single instance of **dio**.
 
 There is a message exchange with the isolate using [ReceivePort](https://api.dart.dev/stable/2.18.5/dart-isolate/ReceivePort-class.html).
 
@@ -85,7 +85,7 @@ The counter increment behavior simulates things happening on Flutter while the r
 * Considering just Flutter HTTP clients and no isolates, the best to the worst performance order is: **HttpClient** -> **http** -> **dio**. That can be correlated to the amount of features these libs have.
 * We can assume the **native** performs better on the heavy scenario because it has one extra thread to process the HTTP requests.
 * The same behavior of handling well the heavy scenario on native can be observed when using isolates. That happens because isolates also use another thread.
-* As **dioIsolate** need to create a new isolate and a new dio client for each request, it has the worst performance of all.
+* As **dioIsolate** needs to create a new isolate and a new **dio** client for each request, it has the worst performance of all.
 
 ## Additional thoughts
 
@@ -94,4 +94,4 @@ Using a simpler HTTP client but adding similar features would make them perform 
 
 The **native** solution could look a good way to go, but on this case, it is necessary to implement and maintain additional logic on native's side. 
 
-The **dioIsolateService** solution could look a good way to go, but as isolates doesn't share memory with the main thread, an extra effort is required to make everything work properly.
+The **dioIsolateService** solution could look a good way to go, but as isolates don't share memory with the main thread, an extra effort is required to make everything work properly.
