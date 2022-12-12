@@ -2,6 +2,7 @@ import 'package:dio_performance/screens/http_time_performance.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  print('main');
   runApp(const MyApp());
 }
 

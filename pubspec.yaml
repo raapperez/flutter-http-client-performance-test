@@ -9,8 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  async: ^2.8.0
   dio: ^4.0.0
   http: ^0.13.5
+  flutter_isolate: ^2.0.4
 
 dev_dependencies:
   flutter_test:

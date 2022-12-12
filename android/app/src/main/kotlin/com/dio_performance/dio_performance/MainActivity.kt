@@ -19,13 +19,13 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         val executorService = Executors.newSingleThreadExecutor()
         val mainThreadHandler = HandlerCompat.createAsync(Looper.getMainLooper())
+        val client = OkHttpClient()
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 call, result ->
             if (call.method == "get") {
                 executorService.execute {
                     try {
-                        val client = OkHttpClient()
                         val arg = call.arguments as Map<*, *>
 
                         val request: Request = Request.Builder()

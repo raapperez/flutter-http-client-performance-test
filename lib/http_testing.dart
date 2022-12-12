@@ -4,6 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+import 'dio_isolate.dart';
+import 'dio_isolate_service.dart';
+
 typedef AsyncFunc = Future<void> Function();
 
 final dio = Dio();
@@ -54,20 +57,29 @@ Future<void> fullTest(
   int iterations = 1000,
   Duration waitDuration = const Duration(milliseconds: 500),
 }) async {
-  print('start');
+  print('start $name');
   try {
-    final httpClientTime = await repeat(httpClientRequest, iterations, waitDuration);
+    final httpClientTime =
+        await repeat(httpClientRequest, iterations, waitDuration);
+    print('httpClientTime');
     final dioTime = await repeat(dioRequest, iterations, waitDuration);
+    print('dioTime');
     final httpTime = await repeat(httpRequest, iterations, waitDuration);
+    print('httpTime');
     final nativeTime = await repeat(nativeRequest, iterations, waitDuration);
-
-    print('${httpClientTime.length}|${dioTime.length}|${httpTime.length}|${nativeTime.length}');
+    print('nativeTime');
+    final dioIsolateTime =
+        await repeat(dioIsolateRequest, iterations, waitDuration);
+    print('dioIsolateTime');
+    final dioIsolateServiceTime =
+        await repeat(dioIsolateServiceRequest, iterations, waitDuration);
+    print('dioIsolateServiceTime');
 
     print('----- $name');
-    print('httpClient;dio;http;native');
+    print('httpClient;dio;http;native;dioIsolate;dioIsolateService');
     for (int i = 0; i < iterations; i++) {
       print(
-          '${httpClientTime[i]};${dioTime[i]};${httpTime[i]};${nativeTime[i]}');
+          '${httpClientTime[i]};${dioTime[i]};${httpTime[i]};${nativeTime[i]};${dioIsolateTime[i]};${dioIsolateServiceTime[i]}');
       await Future.delayed(const Duration(milliseconds: 1));
     }
     print('-----');
