@@ -49,6 +49,8 @@ class MainActivity: FlutterActivity() {
                         result.error("error", error.toString(), "")
                     }
                 }
+            } else if (call.method == "constantString") {
+                result.success("Quisque et diam nunc. Praesent a euismod mi. Nam ante nibh, luctus non leo quis, dapibus ultrices elit. Sed nec orci sapien. Sed id maximus risus, quis blandit ligula. Etiam in feugiat sapien. Etiam nec vehicula sapien. Fusce porta magna vel venenatis venenatis. Donec non ex laoreet, dictum dui a, laoreet augue. Ut vehicula lorem purus, ultrices aliquet lacus pharetra in. Nullam vitae fermentum ligula, semper dapibus sapien. Ut mauris nisl, congue tincidunt metus eu, interdum tincidunt ex.")
             }
         }
     }

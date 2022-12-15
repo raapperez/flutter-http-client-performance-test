@@ -52,34 +52,61 @@ Future<void> httpRequest() => httpClient.get(uri);
 Future<void> nativeRequest() =>
     platform.invokeMethod('get', {'url': url, 'headers': {}});
 
+Future<String?> nativeConstantString() =>
+    platform.invokeMethod<String>('constantString');
+
 Future<void> fullTest(
+  String name, {
+  int iterations = 100,
+  Duration waitDuration = const Duration(milliseconds: 500),
+}) async {
+  print('start $name');
+  try {
+    // final httpClientTime =
+    //     await repeat(httpClientRequest, iterations, waitDuration);
+    // print('httpClientTime');
+    final dioTime = await repeat(dioRequest, iterations, waitDuration);
+    print('dioTime');
+    // final httpTime = await repeat(httpRequest, iterations, waitDuration);
+    // print('httpTime');
+    // final nativeTime = await repeat(nativeRequest, iterations, waitDuration);
+    // print('nativeTime');
+    // final dioIsolateTime =
+    //     await repeat(dioIsolateRequest, iterations, waitDuration);
+    // print('dioIsolateTime');
+    // final dioIsolateServiceTime =
+    //     await repeat(dioIsolateServiceRequest, iterations, waitDuration);
+    // print('dioIsolateServiceTime');
+
+    print('----- $name');
+    print('httpClient;dio;http;native;dioIsolate;dioIsolateService');
+    for (int i = 0; i < iterations; i++) {
+      // print(
+      //     '${httpClientTime[i]};${dioTime[i]};${httpTime[i]};${nativeTime[i]};${dioIsolateTime[i]};${dioIsolateServiceTime[i]}');
+
+      print('${dioTime[i]}');
+      await Future.delayed(const Duration(milliseconds: 1));
+    }
+    print('-----');
+  } catch (e) {
+    print('error: $e');
+  }
+}
+
+Future<void> nativeConstantStringTest(
   String name, {
   int iterations = 1000,
   Duration waitDuration = const Duration(milliseconds: 500),
 }) async {
   print('start $name');
   try {
-    final httpClientTime =
-        await repeat(httpClientRequest, iterations, waitDuration);
-    print('httpClientTime');
-    final dioTime = await repeat(dioRequest, iterations, waitDuration);
-    print('dioTime');
-    final httpTime = await repeat(httpRequest, iterations, waitDuration);
-    print('httpTime');
-    final nativeTime = await repeat(nativeRequest, iterations, waitDuration);
-    print('nativeTime');
-    final dioIsolateTime =
-        await repeat(dioIsolateRequest, iterations, waitDuration);
-    print('dioIsolateTime');
-    final dioIsolateServiceTime =
-        await repeat(dioIsolateServiceRequest, iterations, waitDuration);
-    print('dioIsolateServiceTime');
+    final nativeConstantStringTime =
+        await repeat(nativeConstantString, iterations, waitDuration);
 
     print('----- $name');
-    print('httpClient;dio;http;native;dioIsolate;dioIsolateService');
-    for (int i = 0; i < iterations; i++) {
-      print(
-          '${httpClientTime[i]};${dioTime[i]};${httpTime[i]};${nativeTime[i]};${dioIsolateTime[i]};${dioIsolateServiceTime[i]}');
+    print('nativeConstantString');
+    for (var i = 0; i < iterations; i++) {
+      print('${nativeConstantStringTime[i]}');
       await Future.delayed(const Duration(milliseconds: 1));
     }
     print('-----');

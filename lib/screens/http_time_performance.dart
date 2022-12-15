@@ -11,8 +11,7 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
   void startHeavyJob() {
     stopHeavyJob();
     _counter = 0;
-    _timer = Timer.periodic(
-        const Duration(milliseconds: 200), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
         _counter++;
       });
@@ -59,6 +58,13 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
                   stopHeavyJob();
                 },
                 child: const Text('run both')),
+            ElevatedButton(
+                onPressed: () async {
+                  startHeavyJob();
+                  await nativeConstantStringTest('nativeConstantStringTest');
+                  stopHeavyJob();
+                },
+                child: const Text('nativeConstantStringTest')),
           ],
         ),
       ),
