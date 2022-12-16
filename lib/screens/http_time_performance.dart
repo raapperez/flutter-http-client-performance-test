@@ -59,6 +59,12 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
                   stopHeavyJob();
                 },
                 child: const Text('run both')),
+            ElevatedButton(
+                onPressed: () async {
+                  await idleTimeoutTest('idleTimeoutTest');
+                },
+                child: const Text('idleTimeoutTest')),
+
           ],
         ),
       ),

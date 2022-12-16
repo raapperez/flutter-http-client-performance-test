@@ -87,3 +87,52 @@ Future<void> fullTest(
     print('error: $e');
   }
 }
+
+Future<void> idleTimeoutTest(
+  String name, {
+  int iterations = 20,
+}) async {
+  try {
+    print('start');
+    const waitDurations = [
+      // Duration(milliseconds: 500),
+      // Duration(milliseconds: 2900),
+      // Duration(milliseconds: 3100),
+
+      // Duration(milliseconds: 2400),
+      // Duration(milliseconds: 2600),
+      // Duration(milliseconds: 2800),
+      // Duration(milliseconds: 3000),
+      // Duration(milliseconds: 3200),
+      // Duration(milliseconds: 3400),
+      // Duration(milliseconds: 3600),
+
+      Duration(milliseconds: 1400),
+      Duration(milliseconds: 1600),
+      Duration(milliseconds: 1800),
+      Duration(milliseconds: 2000),
+      Duration(milliseconds: 2200),
+      Duration(milliseconds: 2400),
+      Duration(milliseconds: 2600),
+    ];
+
+    final results = <List<int>>[];
+
+    for (var waitDuration in waitDurations) {
+      print('starting $waitDuration');
+      results.add(await repeat(dioRequest, iterations, waitDuration));
+    }
+
+    print(waitDurations
+        .map((waitDuration) => waitDuration.inMilliseconds)
+        .join(';'));
+
+    for (var i = 0; i < iterations; i++) {
+      print(results.map((result) => result[i]).join(';'));
+      await Future.delayed(const Duration(milliseconds: 1));
+    }
+    print('-----');
+  } catch (e) {
+    print('error: $e');
+  }
+}
