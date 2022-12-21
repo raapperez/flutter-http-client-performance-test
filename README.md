@@ -95,3 +95,13 @@ Using a simpler HTTP client but adding similar features would make them perform 
 The **native** solution could look a good way to go, but on this case, it is necessary to implement and maintain additional logic on native's side. 
 
 The **dioIsolateService** solution could look a good way to go, but as isolates don't share memory with the main thread, an extra effort is required to make everything work properly.
+
+## Deep investigation
+
+To compare what is happening on light and heavy scenarios, an extra analysis using **dio** and 20 HTTP requests was made.
+
+Flutter Dev Tools was used to extract what is happening in the thread where the HTTP connections are made.
+
+The chart bellow shows how the thread is busy on heavy scenario compared to the light one.
+
+![Number of trace events comparing heavy and light scenarios](./docs/images/trace_events.png)
