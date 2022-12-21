@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dio_isolate.dart';
 import 'dio_isolate_service.dart';
 
-typedef AsyncFunc = Future<void> Function();
+typedef AsyncFunc = Future<String?> Function();
 
 final dio = Dio();
 final client = HttpClient();
@@ -40,17 +41,24 @@ Future<List<int>> repeat(
   return microseconds;
 }
 
-Future<void> dioRequest() => dio.get(url);
-
-Future<void> httpClientRequest() async {
-  final request = await client.getUrl(uri);
-  await request.close();
+Future<String?> dioRequest() async {
+  final response = await dio.get<String>(url);
+  return response.data;
 }
 
-Future<void> httpRequest() => httpClient.get(uri);
+Future<String> httpClientRequest() async {
+  final request = await client.getUrl(uri);
+  final response = await request.close();
+  return await response.transform(utf8.decoder).join();
+}
 
-Future<void> nativeRequest() =>
-    platform.invokeMethod('get', {'url': url, 'headers': {}});
+Future<String> httpRequest() async {
+  final response = await httpClient.get(uri);
+  return response.body;
+}
+
+Future<String?> nativeRequest() =>
+    platform.invokeMethod<String>('get', {'url': url, 'headers': {}});
 
 Future<void> fullTest(
   String name, {
