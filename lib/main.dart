@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:dio_performance/screens/http_time_performance.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   print('main');
+  HttpClient.enableTimelineLogging = true;
   runApp(const MyApp());
 }
 

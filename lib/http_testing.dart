@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -21,7 +22,9 @@ const platform = MethodChannel('com.dio_performance/get');
 Future<void> measure(Stopwatch stopwatch, AsyncFunc asyncFunc) async {
   stopwatch.reset();
   stopwatch.start();
+  Timeline.instantSync('single_measure_start');
   await asyncFunc();
+  Timeline.instantSync('single_measure_end');
   stopwatch.stop();
 }
 
