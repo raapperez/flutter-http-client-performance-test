@@ -3,7 +3,8 @@ import 'dart:isolate';
 import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 
-const url = 'http://192.0.0.2:8080/';
+import 'constants.dart';
+
 final port = ReceivePort();
 
 Isolate? isolate;

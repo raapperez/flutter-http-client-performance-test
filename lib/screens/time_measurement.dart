@@ -28,8 +28,8 @@ Future<void> doTest() async {
   await heavyFuture;
   final endHeavy = DateTime.now();
 
-  print('lightTime: ${endLight.difference(startLight).inMilliseconds}');
-  print('heavyTime: ${endHeavy.difference(startHeavy).inMilliseconds}');
+  debugPrint('lightTime: ${endLight.difference(startLight).inMilliseconds}');
+  debugPrint('heavyTime: ${endHeavy.difference(startHeavy).inMilliseconds}');
 }
 
 class TimeMeasurement extends StatelessWidget {
@@ -41,10 +41,10 @@ class TimeMeasurement extends StatelessWidget {
       appBar: AppBar(
         title: const Text('TimeMeasurement'),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
+          children: <Widget>[
             ElevatedButton(
                 onPressed: doTest,
                 child: Text('do test')),

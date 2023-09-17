@@ -4,15 +4,39 @@ import 'package:flutter/material.dart';
 
 import '../http_testing.dart';
 
+class HttpTimePerformance extends StatefulWidget {
+  const HttpTimePerformance({Key? key}) : super(key: key);
+
+  @override
+  State<HttpTimePerformance> createState() => _HttpTimePerformanceState();
+}
+
 class _HttpTimePerformanceState extends State<HttpTimePerformance> {
   int _counter = 0;
   Timer? _timer;
 
+  bool _isTesting = false;
+
+  VoidCallback? _testCallbackDecorator(FutureOr<void> Function() fn) {
+    if (_isTesting) {
+      return null;
+    }
+
+    return () async {
+      setState(() {
+        _isTesting = true;
+      });
+      await fn.call();
+      setState(() {
+        _isTesting = false;
+      });
+    };
+  }
+
   void startHeavyJob() {
     stopHeavyJob();
     _counter = 0;
-    _timer = Timer.periodic(
-        const Duration(milliseconds: 200), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
         _counter++;
       });
@@ -36,39 +60,34 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
           children: <Widget>[
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             ElevatedButton(
-                onPressed: () {
-                  fullTest('light');
-                },
-                child: const Text('run light test')),
+              onPressed: _testCallbackDecorator(() => fullTest('light')),
+              child: const Text('run light test'),
+            ),
             ElevatedButton(
-                onPressed: () async {
-                  startHeavyJob();
-                  await fullTest('heavy');
-                  stopHeavyJob();
-                },
+                onPressed: _testCallbackDecorator(
+                  () async {
+                    startHeavyJob();
+                    await fullTest('heavy');
+                    stopHeavyJob();
+                  },
+                ),
                 child: const Text('run heavy test')),
             ElevatedButton(
-                onPressed: () async {
-                  await fullTest('light');
-
-                  startHeavyJob();
-                  await fullTest('heavy');
-                  stopHeavyJob();
-                },
+                onPressed: _testCallbackDecorator(
+                  () async {
+                    await fullTest('light');
+                    startHeavyJob();
+                    await fullTest('heavy');
+                    stopHeavyJob();
+                  },
+                ),
                 child: const Text('run both')),
           ],
         ),
       ),
     );
   }
-}
-
-class HttpTimePerformance extends StatefulWidget {
-  const HttpTimePerformance({Key? key}) : super(key: key);
-
-  @override
-  State<HttpTimePerformance> createState() => _HttpTimePerformanceState();
 }
