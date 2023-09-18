@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
 
-import 'constants.dart';
+import '../constants.dart';
 
 final dio = Dio();
 

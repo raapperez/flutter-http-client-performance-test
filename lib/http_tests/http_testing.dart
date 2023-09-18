@@ -2,21 +2,22 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio_performance/models/http_test_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
-import 'constants.dart';
+import '../constants.dart';
 import 'dio_isolate.dart';
 import 'dio_isolate_service.dart';
-
-typedef AsyncFunc = Future<String?> Function();
 
 final dio = Dio();
 final client = HttpClient();
 final httpClient = http.Client();
 
 const platform = MethodChannel('com.dio_performance/get');
+
+typedef AsyncFunc = Future<String?> Function();
 
 Future<void> measure(Stopwatch stopwatch, AsyncFunc asyncFunc) async {
   stopwatch.reset();
@@ -60,38 +61,46 @@ Future<String> httpRequest() async {
 Future<String?> nativeRequest() =>
     platform.invokeMethod<String>('get', {'url': url, 'headers': {}});
 
-Future<void> fullTest(
+Future<List<HttpTestResult>> fullTest(
   String name, {
-  int iterations = 1,
-  Duration waitDuration = const Duration(milliseconds: 100),
+  int iterations = 100,
+  Duration waitDuration = const Duration(milliseconds: 50),
 }) async {
   debugPrint('start $name');
   try {
-    final httpClientTime =
-        await repeat(httpClientRequest, iterations, waitDuration);
+    final results = <HttpTestResult>[];
+
+    results.add(HttpTestResult('httpClientTime', await repeat(httpClientRequest, iterations, waitDuration)));
     debugPrint('httpClientTime');
-    final dioTime = await repeat(dioRequest, iterations, waitDuration);
+    
+    results.add(HttpTestResult('dioTime', await repeat(dioRequest, iterations, waitDuration)));
     debugPrint('dioTime');
-    final httpTime = await repeat(httpRequest, iterations, waitDuration);
+    
+    results.add(HttpTestResult('httpTime', await repeat(httpRequest, iterations, waitDuration)));
     debugPrint('httpTime');
-    final nativeTime = await repeat(nativeRequest, iterations, waitDuration);
+    
+    results.add(HttpTestResult('nativeTime', await repeat(nativeRequest, iterations, waitDuration)));
     debugPrint('nativeTime');
-    final dioIsolateTime =
-        await repeat(dioIsolateRequest, iterations, waitDuration);
+    
+    results.add(HttpTestResult('dioIsolateTime', await repeat(dioIsolateRequest, iterations, waitDuration)));
     debugPrint('dioIsolateTime');
-    final dioIsolateServiceTime =
-        await repeat(dioIsolateServiceRequest, iterations, waitDuration);
+    
+    results.add(HttpTestResult('dioIsolateServiceTime', await repeat(dioIsolateServiceRequest, iterations, waitDuration)));
     debugPrint('dioIsolateServiceTime');
 
     debugPrint('----- $name');
     debugPrint('httpClient;dio;http;native;dioIsolate;dioIsolateService');
+
     for (int i = 0; i < iterations; i++) {
-      debugPrint(
-          '${httpClientTime[i]};${dioTime[i]};${httpTime[i]};${nativeTime[i]};${dioIsolateTime[i]};${dioIsolateServiceTime[i]}');
-      await Future.delayed(const Duration(milliseconds: 1));
+      final buffer = StringBuffer();
+      for (final result in results) {
+        buffer.write('${result.iterations[i]};');
+      }
+      debugPrint(buffer.toString());
     }
-    debugPrint('-----');
+    return results;
   } catch (e) {
     debugPrint('error: $e');
   }
+  return [];
 }

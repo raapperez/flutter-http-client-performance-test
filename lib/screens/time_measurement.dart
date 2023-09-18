@@ -7,7 +7,7 @@ Future<void> heavyOperation() async {
 
   final numbers = <int>[];
   final random = Random();
-  for(int i = 0; i < 1000000; i++) {
+  for (int i = 0; i < 1000000; i++) {
     numbers.add(random.nextInt(10000000));
   }
   numbers.sort();
@@ -44,11 +44,7 @@ class TimeMeasurement extends StatelessWidget {
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-                onPressed: doTest,
-                child: Text('do test')),
-          ],
+          children: <Widget>[ElevatedButton(onPressed: doTest, child: Text('do test'))],
         ),
       ),
     );

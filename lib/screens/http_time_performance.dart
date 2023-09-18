@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../http_testing.dart';
+import '../http_tests/http_testing.dart';
+import '../models/http_test_group.dart';
+import 'show_http_test_result_modal.dart';
 
 class HttpTimePerformance extends StatefulWidget {
   const HttpTimePerformance({Key? key}) : super(key: key);
@@ -17,7 +19,15 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
 
   bool _isTesting = false;
 
-  VoidCallback? _testCallbackDecorator(FutureOr<void> Function() fn) {
+  /// Each item in the list represents a whole test process.
+  ///
+  /// Each test contains a list of results for each client.
+  List<HttpTestGroup> _testGroups = [];
+
+  /// Wraps the callback to prevent multiple tests running at the same time.
+  ///
+  /// If a test is already running, returns null and block the buttons.
+  VoidCallback? _testCallbackWrapper(Future<List<HttpTestGroup>> Function() fn) {
     if (_isTesting) {
       return null;
     }
@@ -26,7 +36,7 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
       setState(() {
         _isTesting = true;
       });
-      await fn.call();
+      _testGroups = await fn.call();
       setState(() {
         _isTesting = false;
       });
@@ -49,44 +59,75 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
   }
 
   @override
+  void dispose() {
+    stopHeavyJob();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('HTTP time performance'),
+      appBar: AppBar(title: const Text('HTTP time performance')),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Text(
+            '$_counter',
+            style: Theme.of(context).textTheme.headlineMedium,
+            textAlign: TextAlign.center,
+          ),
+          Wrap(
+            alignment: WrapAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: _testCallbackWrapper(() async => [HttpTestGroup('light', await fullTest('light'))]),
+                child: const Text('run light test'),
+              ),
+              ElevatedButton(
+                onPressed: _testCallbackWrapper(
+                  () async {
+                    startHeavyJob();
+                    final res = await fullTest('heavy');
+                    stopHeavyJob();
+                    return [HttpTestGroup('heavy', res)];
+                  },
+                ),
+                child: const Text('run heavy test'),
+              ),
+              ElevatedButton(
+                onPressed: _testCallbackWrapper(
+                  () async {
+                    final lightTest = await fullTest('light');
+                    startHeavyJob();
+                    final heavyTest = await fullTest('heavy');
+                    stopHeavyJob();
+                    return [HttpTestGroup('lightTest', lightTest), HttpTestGroup('heavyTest', heavyTest)];
+                  },
+                ),
+                child: const Text('run both'),
+              ),
+            ],
+          ),
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            ElevatedButton(
-              onPressed: _testCallbackDecorator(() => fullTest('light')),
-              child: const Text('run light test'),
-            ),
-            ElevatedButton(
-                onPressed: _testCallbackDecorator(
-                  () async {
-                    startHeavyJob();
-                    await fullTest('heavy');
-                    stopHeavyJob();
-                  },
-                ),
-                child: const Text('run heavy test')),
-            ElevatedButton(
-                onPressed: _testCallbackDecorator(
-                  () async {
-                    await fullTest('light');
-                    startHeavyJob();
-                    await fullTest('heavy');
-                    stopHeavyJob();
-                  },
-                ),
-                child: const Text('run both')),
-          ],
-        ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (_testGroups.isEmpty) {
+            const snack = SnackBar(content: Text('No results to show at this moment. Try run one of the tests.'));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+            return;
+          }
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            isDismissible: true,
+            showDragHandle: true,
+            useSafeArea: true,
+            builder: (_) => ShowHttpTestResultModal(testGroups: _testGroups),
+          );
+        },
+        label: const Text('View latest results'),
       ),
     );
   }
