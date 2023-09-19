@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../http_tests/http_testing.dart';
 import '../models/http_test_group.dart';
+import 'settings_screen.dart';
 import 'show_http_test_result_modal.dart';
 
 class HttpTimePerformance extends StatefulWidget {
@@ -67,7 +68,15 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('HTTP time performance')),
+      appBar: AppBar(
+        title: const Text('HTTP time performance'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsPage())),
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,7 +90,7 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
             alignment: WrapAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: _testCallbackWrapper(() async => [HttpTestGroup('light', await fullTest('light'))]),
+                onPressed: _testCallbackWrapper(() async => [HttpTestGroup('lightTest', await fullTest('light'))]),
                 child: const Text('run light test'),
               ),
               ElevatedButton(
@@ -90,7 +99,7 @@ class _HttpTimePerformanceState extends State<HttpTimePerformance> {
                     startHeavyJob();
                     final res = await fullTest('heavy');
                     stopHeavyJob();
-                    return [HttpTestGroup('heavy', res)];
+                    return [HttpTestGroup('heavyTest', res)];
                   },
                 ),
                 child: const Text('run heavy test'),

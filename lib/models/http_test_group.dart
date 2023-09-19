@@ -5,7 +5,9 @@ import 'http_test_result.dart';
 /// It receives the test name and a list of results for each client.
 final class HttpTestGroup {
   final String testName;
-  final List<HttpTestResult> results;
+  final List<HttpTestResult> testClients;
 
-  const HttpTestGroup(this.testName, this.results);
+  const HttpTestGroup(this.testName, this.testClients);
+
+  int get iterationsLength => testClients.first.iterations.length;
 }

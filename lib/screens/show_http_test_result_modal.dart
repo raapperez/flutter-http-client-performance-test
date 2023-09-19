@@ -45,7 +45,7 @@ class __HttpTestGroupViewState extends State<_HttpTestGroupView> {
     } else {
       _rowsPerPage = 10;
     }
-    _clientDataColumns = widget.testGroup.results.map((result) {
+    _clientDataColumns = widget.testGroup.testClients.map((result) {
       return DataColumn(label: Text(result.clientName));
     }).toList();
     super.initState();
@@ -89,10 +89,13 @@ class _HttpTestGroupDTS extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final clientIterationsResults =
-        testGroup.results.map((result) => DataCell(Text(result.iterations[index].toString()))).toList();
+        testGroup.testClients.map((result) => DataCell(Text(result.iterations[index].toString()))).toList();
     return DataRow.byIndex(
       index: index,
-      cells: [DataCell(Text('${index + 1}')), ...clientIterationsResults],
+      cells: [
+        DataCell(Text('${index + 1}')),
+        ...clientIterationsResults,
+      ],
     );
   }
 
@@ -100,7 +103,7 @@ class _HttpTestGroupDTS extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => testGroup.results.first.iterations.length;
+  int get rowCount => testGroup.iterationsLength;
 
   @override
   int get selectedRowCount => 0;

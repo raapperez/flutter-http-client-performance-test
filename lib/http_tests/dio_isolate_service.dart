@@ -3,7 +3,7 @@ import 'dart:isolate';
 import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 
-import '../constants.dart';
+import '../settings.dart';
 
 
 final port = ReceivePort();
