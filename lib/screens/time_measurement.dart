@@ -7,7 +7,7 @@ Future<void> heavyOperation() async {
 
   final numbers = <int>[];
   final random = Random();
-  for(int i = 0; i < 1000000; i++) {
+  for (int i = 0; i < 1000000; i++) {
     numbers.add(random.nextInt(10000000));
   }
   numbers.sort();
@@ -28,8 +28,8 @@ Future<void> doTest() async {
   await heavyFuture;
   final endHeavy = DateTime.now();
 
-  print('lightTime: ${endLight.difference(startLight).inMilliseconds}');
-  print('heavyTime: ${endHeavy.difference(startHeavy).inMilliseconds}');
+  debugPrint('lightTime: ${endLight.difference(startLight).inMilliseconds}');
+  debugPrint('heavyTime: ${endHeavy.difference(startHeavy).inMilliseconds}');
 }
 
 class TimeMeasurement extends StatelessWidget {
@@ -41,14 +41,10 @@ class TimeMeasurement extends StatelessWidget {
       appBar: AppBar(
         title: const Text('TimeMeasurement'),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            ElevatedButton(
-                onPressed: doTest,
-                child: Text('do test')),
-          ],
+          children: <Widget>[ElevatedButton(onPressed: doTest, child: Text('do test'))],
         ),
       ),
     );

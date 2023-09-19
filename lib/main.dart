@@ -2,7 +2,7 @@ import 'package:dio_performance/screens/http_time_performance.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  print('main');
+  debugPrint('main');
   runApp(const MyApp());
 }
 
@@ -13,9 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Time performance',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      // home: const TimeMeasurement(),
+      title: 'HTTP Time performance',
+      theme: ThemeData.from(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
       home: const HttpTimePerformance(),
     );
   }
