@@ -80,8 +80,8 @@ Future<List<HttpTestResult>> fullTest(String name) async {
     results.add(HttpTestResult('dioIsolateServiceTime', await repeat(dioIsolateServiceRequest)));
     debugPrint('dioIsolateServiceTime');
 
-    results.add(HttpTestResult('Chopper', await repeat(chopperRequest)));
-    debugPrint('dioIsolateServiceTime');
+    results.add(HttpTestResult('chopper', await repeat(chopperRequest)));
+    debugPrint('chopper');
 
     debugPrint('----- $name');
     debugPrint('httpClient;dio;http;native;dioIsolate;dioIsolateService;chopper');
@@ -92,6 +92,7 @@ Future<List<HttpTestResult>> fullTest(String name) async {
         buffer.write('${result.iterations[i]};');
       }
       debugPrint(buffer.toString());
+      buffer.clear();
     }
     return results;
   } catch (e) {
