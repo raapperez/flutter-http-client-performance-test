@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../settings.dart' as constants;
+import '../settings.dart' as settings;
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -16,35 +16,35 @@ class SettingsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
-                initialValue: constants.url,
+                initialValue: settings.url,
                 keyboardType: TextInputType.url,
-                onChanged: (txt) => constants.url = txt,
+                onChanged: (txt) => settings.url = txt,
                 decoration: const InputDecoration(labelText: 'URL'),
               ),
               TextFormField(
-                initialValue: constants.maxRowsPerPage.toString(),
+                initialValue: settings.maxRowsPerPage.toString(),
                 keyboardType: const TextInputType.numberWithOptions(),
                 onChanged: (txt) {
                   final maxRowsPerPage = int.tryParse(txt) ?? 1;
-                  constants.maxRowsPerPage = maxRowsPerPage <= 0 ? 1 : maxRowsPerPage;
+                  settings.maxRowsPerPage = maxRowsPerPage <= 0 ? 1 : maxRowsPerPage;
                 },
                 decoration: const InputDecoration(labelText: 'Number of rows to show in the result table'),
               ),
               TextFormField(
-                initialValue: constants.iterations.toString(),
+                initialValue: settings.iterations.toString(),
                 keyboardType: const TextInputType.numberWithOptions(),
                 onChanged: (txt) {
                   final iterations = int.tryParse(txt) ?? 1;
-                  constants.iterations = iterations <= 0 ? 1 : iterations;
+                  settings.iterations = iterations <= 0 ? 1 : iterations;
                 },
                 decoration: const InputDecoration(labelText: 'Iterations'),
               ),
               TextFormField(
-                initialValue: constants.waitDuration.inMilliseconds.toString(),
+                initialValue: settings.waitDuration.inMilliseconds.toString(),
                 keyboardType: const TextInputType.numberWithOptions(),
                 onChanged: (txt) {
                   final waitDuration = int.tryParse(txt) ?? 500;
-                  constants.waitDuration = Duration(milliseconds: waitDuration <= 0 ? 500 : waitDuration);
+                  settings.waitDuration = Duration(milliseconds: waitDuration <= 0 ? 500 : waitDuration);
                 },
                 decoration: const InputDecoration(labelText: 'Delay duration between iterations (ms)'),
               ),

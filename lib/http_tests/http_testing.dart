@@ -6,8 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
-import '../settings.dart' as constants;
+import '../settings.dart' as settings;
 import '../models/http_test_result.dart';
+import 'chopper_testing/chopper_testing.dart';
 import 'dio_isolate.dart';
 import 'dio_isolate_service.dart';
 
@@ -29,8 +30,8 @@ Future<void> measure(Stopwatch stopwatch, AsyncFunc asyncFunc) async {
 Future<List<int>> repeat(AsyncFunc asyncFunc) async {
   final microseconds = <int>[];
   final stopwatch = Stopwatch();
-  for (int i = 0; i < constants.iterations; i++) {
-    await Future.delayed(constants.waitDuration);
+  for (int i = 0; i < settings.iterations; i++) {
+    await Future.delayed(settings.waitDuration);
     await measure(stopwatch, asyncFunc);
     microseconds.add(stopwatch.elapsedMicroseconds);
   }
@@ -39,22 +40,22 @@ Future<List<int>> repeat(AsyncFunc asyncFunc) async {
 }
 
 Future<String?> dioRequest() async {
-  final response = await dio.get<String>(constants.url);
+  final response = await dio.get<String>(settings.url);
   return response.data;
 }
 
 Future<String> httpClientRequest() async {
-  final request = await client.getUrl(Uri.parse(constants.url));
+  final request = await client.getUrl(Uri.parse(settings.url));
   final response = await request.close();
   return await response.transform(utf8.decoder).join();
 }
 
 Future<String> httpRequest() async {
-  final response = await httpClient.get(Uri.parse(constants.url));
+  final response = await httpClient.get(Uri.parse(settings.url));
   return response.body;
 }
 
-Future<String?> nativeRequest() => platform.invokeMethod<String>('get', {'url': constants.url, 'headers': {}});
+Future<String?> nativeRequest() => platform.invokeMethod<String>('get', {'url': settings.url, 'headers': {}});
 
 Future<List<HttpTestResult>> fullTest(String name) async {
   debugPrint('start $name');
@@ -79,10 +80,13 @@ Future<List<HttpTestResult>> fullTest(String name) async {
     results.add(HttpTestResult('dioIsolateServiceTime', await repeat(dioIsolateServiceRequest)));
     debugPrint('dioIsolateServiceTime');
 
-    debugPrint('----- $name');
-    debugPrint('httpClient;dio;http;native;dioIsolate;dioIsolateService');
+    results.add(HttpTestResult('Chopper', await repeat(chopperRequest)));
+    debugPrint('dioIsolateServiceTime');
 
-    for (int i = 0; i < constants.iterations; i++) {
+    debugPrint('----- $name');
+    debugPrint('httpClient;dio;http;native;dioIsolate;dioIsolateService;chopper');
+
+    for (int i = 0; i < settings.iterations; i++) {
       final buffer = StringBuffer();
       for (final result in results) {
         buffer.write('${result.iterations[i]};');
