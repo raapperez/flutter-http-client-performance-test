@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../settings.dart' as settings;
 import '../models/http_test_group.dart';
 
 class ShowHttpTestResultModal extends StatelessWidget {
@@ -40,14 +41,12 @@ class __HttpTestGroupViewState extends State<_HttpTestGroupView> {
   @override
   void initState() {
     _source = _HttpTestGroupDTS(widget.testGroup);
-    if (_source.rowCount < 10) {
+    if (_source.rowCount < settings.maxRowsPerPage) {
       _rowsPerPage = _source.rowCount;
     } else {
-      _rowsPerPage = 10;
+      _rowsPerPage = settings.maxRowsPerPage;
     }
-    _clientDataColumns = widget.testGroup.testClients.map((result) {
-      return DataColumn(label: Text(result.clientName));
-    }).toList();
+    _clientDataColumns = widget.testGroup.testClients.map((result) => DataColumn(label: Text(result.clientName))).toList();
     super.initState();
   }
 
